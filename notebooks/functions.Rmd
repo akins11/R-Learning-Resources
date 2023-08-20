@@ -1,0 +1,184 @@
+# Function
+Functions are blocks of reusable code that perform a specific task or set of tasks. In programming, functions help in modularizing code, improving code readability, and reducing redundancy. 
+Functions take input arguments (parameters), process them, and return a result (output).
+
+In R, functions are defined using the `function()` keyword
+
+```{r}
+
+function_name <- function(parameter1, parameter2, ...) {
+  
+  # Function body: code that performs the task
+  
+  # ....
+  
+  # Return statement (optional): return the result
+  
+  return(result)
+  
+}
+
+```
+
+function_name: This is the name you give to your function. You use this name to call the function later.
+
+parameter1, parameter2, ...: These are the input parameters (arguments) that the function accepts. You can have zero or more parameters.
+
+function body: This is where you write the code that performs the task of the function.
+
+return(result): This is an optional statement that specifies what the function should return as its result. If this statement is not present, the function will return the last evaluated expression in the function body.
+
+
+### Built-in functions
+Built-in functions are part of the core R language, and they are available by default without the need for any additional packages or libraries. 
+Examples of built-in functions include `sum()`, `mean()`, `length()`, `print()`, and many others. You can start using built-in functions right away after installing R.
+
+
+```{r}
+
+salary <- c(1500, 1500, 1600)
+
+paste("Total :", sum(salary))
+
+paste("Minimum :", min(salary))
+
+paste("Average", mean(salary))
+
+paste("Maximum :", max(salary))
+
+```
+
+
+Get the number of characters
+
+```{r}
+
+nchar("Elizabeth")
+
+```
+
+
+Extract only unique elements using the `unique()` function 
+
+```{r}
+
+employee_names <- c("Elizabeth", "John", "Mary", "Henry", "John", "Mary")
+
+unique(employee_names)
+
+```
+
+
+### Custom functions
+Custom functions are user-defined functions created to meet specific requirements and perform specific tasks. You can create your own functions using the `function()` keyword.
+You can also create custom functions tailored to your specific data analysis needs and reuse them across different projects.
+
+```{r}
+
+# A function that sums two values together.
+
+add <- function(x, y) {
+  
+  return(x + y)
+  
+}
+
+add(50, 30)
+
+```
+
+
+Handling wrong arguments
+
+The divide function checks for division by zero. If the denominator argument ( y ) is equal to 0, the function raises an error.
+
+```{r}
+divide <- function(x, y) {
+  
+  if (y != 0) {
+    
+    return(x / y)
+    
+  } else {
+    
+    stop("Argument `y` cannot be zero")
+    
+  }
+  
+}
+
+divide(10, 2)
+```
+
+
+```{r}
+
+divide(10, 0)
+
+```
+
+
+### Anonymous functions
+An anonymous function, also known as a "lambda function" or a "function without name" is a function that is defined without assigning it a specific name. They are very useful when you need to pass a short and simple function as an argument to another function or when you want to create a function for a one time use.
+
+```{r}
+
+lapply(seq_len(3), function(x) x + 100)
+
+```
+
+
+OR Using the shorthand function `\(x)`
+
+```{r}
+
+lapply(seq_len(3), \(x) x + 100)
+
+```
+
+
+### Chaining
+The `|>` (pronounced as "pipe") syntax in R, also known as the pipe operator. It allows you to chain several functions together in a left to right fashion, where the output of one function becomes the input of the next function. 
+
+Previously we wrote several codes by nesting them:
+
+```{r}
+
+length(unique(rep(1:5, 10)))
+
+```
+
+
+We can rewrite the above code separately which improves readability, but it increases the amount of code we have to write.
+
+```{r}
+
+values <- rep(1:5, 10)
+
+unique_values <- unique(values)
+
+length(unique_values)
+
+```
+
+
+Using the pipe operator have several advantages over the previous style, such as improving readability and flow, reducing nesting, code flexibility e.t.c
+
+```{r}
+
+rep(1:5, 10) |>        # Get the values `then`,
+  unique() |>          # Get the unique values `then`,
+  length()             # Get the number of unique values.
+
+```
+
+
+we can write the above code in a single line.
+```{r}
+
+rep(1:5, 10) |> unique() |> length()
+
+```
+
+
+Please be aware that the native pipe operator ( |> ) and the shorthand function syntax ( \(x) ) were only introduced in version 4.1.0 of R. Therefore, these features won't be available in older versions of R.

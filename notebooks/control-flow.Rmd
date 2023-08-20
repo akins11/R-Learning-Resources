@@ -1,0 +1,224 @@
+# Control flow
+Control flow refers to the order in which statements and instructions are executed in a program. It allows you to control the flow of the program's execution based on certain conditions, making it possible to perform different actions or make decisions depending on the values of variables or the results of expressions.
+
+
+control flow can be achieved using various control structures, such as:
+> Conditional Statements
+
+> Switch Statement
+
+> Loops
+
+## Conditional statement
+Conditional statements are used to control the flow of a program based on certain conditions. i.e They handle the way a program is executed.
+
+The main types of conditional statements are:
+
+### if
+Executes a block of code if a given condition is true
+
+```{r}
+
+if (10 > 5) {
+  
+  print("10 is greater then 5")
+  
+}
+
+```
+
+### else
+Executes a block of code if the condition in the if statement is false.
+
+```{r}
+
+if (10 > 15) {
+  
+  print("10 is greater than 15")
+  
+} else {
+  
+  print("10 is not greater than 15")
+  
+}
+
+```
+
+
+### else if
+Used to check additional conditions if the previous if condition or (else if condition) is FALSE. If previous condition is false, then it execute the current block of code if it is TRUE.
+
+
+```{r}
+
+x <- -10
+
+if (x > 0) {
+  
+  print("x is positive")
+  
+} else if (x < 0) {
+  
+  print("x is negative")
+  
+} else {
+  
+  print("x is zero")
+  
+}
+
+```
+
+
+### The `ifelse()` function
+
+```{r}
+
+fruits <- c("banana", "grape", "mango")
+
+ifelse(
+  "apple" %in% fruits,             # condition to test
+  "We have an apple",              # Return this IF the condition is `TRUE`
+  "We don't have any apple"        # Return this IF the condition is `FALSE`
+)
+
+
+```
+
+
+## Switch Statement:
+Using the `switch()` function, We can select one of several alternatives based on a specific value or expression.
+
+
+```{r}
+
+selected_fruit <- "Apple"
+
+switch(
+  selected_fruit,
+  "Banana" = print("The Selected Fruit is banana"),
+  "Apple"  = print("The Selected Fruit is apple"),
+  "Mango"  = print("The Selected Fruit is mango"),
+)
+
+```
+
+
+
+## Loops
+Loops are programming structures that allows you to execute a block of code repeatedly based on a specified condition. They enable you to perform iterative operative tasks on data or execute a set of instructions multiple times without writing repetitive code. 
+
+R support various type of loops, such as:
+
+### for loop
+for: Executes a block of code repeatedly for a fixed number of iterations.
+
+We will use the `seq_len()` function to generate a sequence of numbers from 1 to 5, which is very effective when iterating over an increasing sequence of integers.
+
+
+```{r}
+
+seq_len(5)
+
+```
+
+
+```{r}
+
+for (i in seq_len(5)) {
+  
+  print(paste("Iteration = ", i))
+  
+}
+
+```
+
+
+#### performing operations
+For each iteration the number 10 will be added. 
+
+```{r}
+
+for (i in seq_len(5)) {
+  
+  print(i + 10)
+  
+}
+
+```
+
+
+#### Assignment
+When using a `for` loop, you can perform assignments to update variables or elements of vectors of data structure during each iteration.
+let's see a simple example to understand assignment within a for loop. Here we will add 500 to each person salary.
+
+```{r}
+salary <- c(1500, 1000, 2000)
+
+for (i in seq_len(length(salary))) {
+  
+  salary[i] <- salary[i] + 500
+  
+}
+
+salary
+```
+
+
+#### Lapply
+The `lapply()` function provide a concise and efficient way to perform operations on data structure without using explicit loops. The function will always return a list as output.
+
+
+```{r}
+salary <- list(1500, 1000, 2000)
+
+lapply(salary, function(x) x + 500)
+```
+
+
+In the example above, `lapply()` applies the anonymous function `function(x) x + 500` to each element of the list salary and returns a new list with the addition of 500 to each element in the original list.
+
+
+### while
+A while loop executes a block of code as long as a given condition is true. In other words it will continue to execute a block of code as long as a given condition remains true. It is often used when the number of iterations is not known it advance.
+
+
+```{r}
+count <- 1
+
+while (count <= 5) {
+  
+  print(count)
+  
+  count <- count + 1
+}
+
+```
+
+
+In this example, the while loop runs as long as the count variable is less than or equal to 5. In each iteration, the value of count is printed, and it is incremented by 1
+
+
+
+### repeat
+Executes a block of code repeatedly until a break statement is encountered. In other words the repeat loop will continue to execute a block of code indefinitely until a specific condition (usually specified with the break statement) is met.
+
+
+```{r}
+count <- 1
+
+repeat {
+  
+  print(count)
+  
+  count <- count + 1
+  
+  if (count > 5) {
+    
+    break
+    
+  }
+}
+```
+
+In the previous example, the repeat loop runs indefinitely, but we use the break statement to terminate the loop when the count variable exceeds 5.

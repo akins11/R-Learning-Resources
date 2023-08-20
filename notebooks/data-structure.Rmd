@@ -1,0 +1,510 @@
+# data structure
+
+
+## Vector
+A vector is a fundamental data structure used to store a collection of elements of the `same data type`. It can be thought of as a one-dimensional array that holds values and those values can be numeric, character, logical or other types.
+
+creating Vectors:
+
+```{r}
+
+# Numeric vector
+age <- c(15, 25)
+
+age
+
+# Character vector
+gender <- c("Female", "male")
+
+gender
+
+
+# Logical vector
+logical_vector <- c(TRUE, FALSE)
+
+logical_vector
+  
+```
+
+
+### Named vector
+A named vector consist of a collection of elements with each element having a name or an identifier associated with it.
+
+
+```{r}
+name <- c("Elizabeth", "John")
+
+names(age) <- name
+
+age
+```
+
+
+```{r}
+names(gender) <- name
+
+gender
+```
+
+
+
+### Coercion 
+The process of coercion involves converting or transforming data from one type to another to ensure consistency within the vector.
+
+If you combine numeric data with character data, R will convert all the elements into character data
+
+
+```{r}
+
+c(1, "A", 20.4)       
+
+```
+
+
+
+If you mix logical data (TRUE/FALSE) with numeric data, R will convert all the elements into numeric data (TRUE -> 1,  FALSE -> 0)
+
+```{r}
+
+c(TRUE, 2, FALSE, 4)
+
+```
+
+
+If you combine different numeric types (e.g, integer and double), R will convert all the element to the more general data type (double)
+
+```{r}
+c(1L, 2.0, 3L, 4.1)
+```
+
+
+### Combine multiple vectors
+  R can combine multiple vectors using the `c()` function, so it is important you understand the underlying data type to avoid coercion.
+
+```{r}
+
+name <- c("Elizabeth", "John")
+
+gender <- c("Female", "male")
+
+c(name, gender)
+
+```
+
+
+### Vectorization
+Vectorization is a powerful concept in R, where operations are applied to entire vectors instead of individual elements. When using vectorized operations, R automatically loops through each element of the vectors and performs the operation efficiently.
+
+
+```{r}
+
+salary <- c(1000, 5000, 2000)
+
+salary * 2
+
+salary / 2
+
+```
+
+
+```{r}
+
+bonus <- c(500, 2500, 1000)  
+
+salary + bonus
+
+```
+
+
+
+
+## Matrix
+In R, a matrix is a two-dimensional data structure that consists of rows and column, where each element in the matrix is of the same data type.
+
+Creating a Matrix
+you can create a matrix if R using the `matrix()` function. The matrix() function takes the date elements.
+
+```{r}
+
+vec <- c(1, 2, 3, 4, 5, 6)
+
+mat <- matrix(
+  vec,
+  nrow = 2,
+  ncol = 3
+)
+
+mat
+
+```
+
+
+### using cbind
+Alternatively, you can also create a matrix using the cbind() function which bind vectors column-wise
+
+```{r}
+
+vec1 <- c(1, 2, 3)
+vec2 <- c(4, 5, 6)
+
+mat <- cbind(vec1, vec2)
+
+mat
+
+```
+
+
+### using rbind
+You can also create a matrix using the rbind() function which binds vectors row-wise
+
+```{r}
+
+vec1 <- c(1, 2, 3)
+vec2 <- c(4, 5, 6)
+
+mat <- rbind(vec1, vec2)
+
+mat
+
+```
+
+
+### Accessing Elements in a matrix
+You can access elements in a matrix using row and column indices inside square brackets.
+
+```{r}
+
+mat <- matrix(
+  1:9,
+  nrow = 3,
+  ncol = 3
+)
+
+mat
+
+```
+
+
+Get the elements in the second row and third column.
+```{r}
+
+mat[2, 3] 
+
+```
+
+
+Get the elements in the second & third row and also first column.
+```{r}
+
+mat[2:3, 1]
+
+```
+
+
+Get the elements in the second & third row and the first & second column.
+```{r}
+
+mat[2:3, 1:2]
+
+```
+
+
+### Matrix Operations
+Matrices in R support various mathematical operations, such as addition, subtraction, multiplication, and transposition.
+
+
+```{r}
+
+mat1 <- matrix(1:4, nrow = 2)
+mat2 <- matrix(5:8, nrow = 2)
+
+mat1
+mat2
+
+```
+
+
+Addition
+```{r}
+
+mat1 + mat2
+
+```
+
+
+Multiplication
+```{r}
+
+mat1 %*% mat2
+
+```
+
+
+Transposition
+```{r}
+
+t(mat1)
+
+```
+
+
+
+## List
+In R, a list is a versatile and powerful data structure that can hold elements of different data types. Unlike vectors and matrices, lists can store heterogeneous data, such as numeric values, character strings, other lists, or even functions.
+
+### Heterogeneous elements
+Lists can contain elements of different data types. This flexibility allows you to organize and store diverse information together in a single data structure.
+
+
+```{r}
+
+list(25, "Elizabeth", c(1, 2, 3, 4), TRUE)
+
+```
+
+
+### Named Elements
+List elements can be given names, making it easy to access and manipulate specific elements within the list.
+
+```{r}
+
+employee_list <- list(
+  name = c("Elizabeth", "John"),
+  age = c(15, 25),
+  active_employee = c(TRUE, FALSE)
+)
+
+employee_list
+
+```
+
+
+
+### Nested List
+Lists can contain other lists as elements, creating a nested data structure. This allows you to organize complex data hierarchically,
+ 
+```{r}
+
+list(
+  name = "John",
+  address = list(country = "Ghana", region = "Ashanti")
+)
+
+```
+
+
+### Accessing Elements
+In R, you can access elements in a list using different methods, depending on whether you want to access them by their index or their names.
+
+
+```{r}
+
+# first syntax using an index and double bracket `[[]]`
+employee_list[[1]]
+
+
+# second syntax using character names and double bracket
+employee_list[["name"]]
+
+
+# third syntax using list name and list-subsetting operator '$'
+employee_list$name
+
+```
+
+
+```{r}
+# access the first name in the list using the index
+
+employee_list$name[1]
+
+```
+
+Multiple elements
+```{r}
+# access the multiple names in the list using the index
+
+employee_list$name[c(1, 2)]
+
+```
+
+
+### Adding Elements to a list
+To add new elements, we will use the ( $ ) operator to access the top element in the list and use the `c()` function to concatenate the new elements with the existing vector.
+
+```{r}
+
+# Update the name element
+
+employee_list$name <- c(employee_list$name, "Mary")
+
+
+# Update the age element
+employee_list$age <- c(employee_list$age, 28)
+
+
+# Update the active_employee element
+employee_list$active_employee <- c(employee_list$active_employee, TRUE)
+
+
+employee_list
+
+```
+
+
+### Deleting element
+You can use the NULL value to indicate that the item should be removed. Setting an element in a list to NULL effectively deletes that particular element. 
+
+All elements
+
+```{r}
+
+employee_list$active_employee <- NULL
+
+employee_list
+
+```
+
+
+Deleting single elements using index
+To delete single elements from a vector in a list, you can use indexing and subsetting.
+```{r}
+
+employee_list$name <- employee_list$name[-4]
+
+
+employee_list$age <- employee_list$age[-4]
+
+employee_list$gender <- employee_list$gender[-4]
+
+employee_list
+
+```
+
+
+
+## Dataframe
+In R, a dataframe is a two-dimensional data structure that is similar to a spreadsheet. It is one of the most commonly used data structures in R for data manipulation and analysis. Dataframes are especially well-suited for working with structured and tabular data.
+
+
+```{r}
+
+df <- data.frame(
+  name = c("Elizabeth", "John"),
+  age = c(15, 25),
+  active_employee = c(TRUE, FALSE)
+)
+
+df
+
+```
+
+
+### access the column names using colnames
+
+
+```{r}
+
+colnames(df)
+
+```
+
+
+### Get the number of rows and columns
+
+```{r}
+
+# Number of rows using `nrow()` function
+nrow(df)
+
+
+# Number of columns using `ncol()` function
+ncol(df)
+
+ 
+# Or both rows and columns using `dim()` function
+dim(df)
+
+```
+
+
+### structure
+
+```{r}
+
+str(df)
+
+```
+
+
+### adding new columns
+To add a new column to a data frame, you can simply assign a vector of values to a new column name within the data frame.
+
+
+```{r}
+
+df$gender <- c("Female", "Male")
+
+df
+
+```
+
+
+Or using `cbind()` function
+
+```{r}
+
+salary <- c(1500, 1500)
+
+df <- cbind(df, salary)
+
+df
+
+```
+
+
+### adding new rows
+We can add new records (rows) using the `rbind()` function.
+
+
+```{r}
+
+df <- rbind(df, c("Mary", 28, TRUE, "Female", 1600))
+
+df
+
+```
+
+
+
+## Accessing elements in a dataframe
+
+Extract a column
+```{r}
+
+df$name
+
+```
+
+Using index row and columns to get specific records
+```{r}
+
+df[1, 1]  # The first row (1) and column (1) 
+
+```
+
+
+A single record and multiple columns
+```{r}
+
+df[1, ]
+
+```
+
+
+Multiple records and columns
+```{r}
+
+df[c(1, 2), c(2, 5)]  # Get the age and salary of each employee
+
+```

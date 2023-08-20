@@ -1,0 +1,54 @@
+
+```{r}
+
+"Hello World!!"
+
+```
+
+
+# Arithemtic operation
+R offers various arithmetic capabilities, including basic arithmetic operations 
+(addition, subtraction, multiplication, division)
+
+## Addition (+)
+Addition is the arithmetic operation used to combine two or more numbers to find their sum. The addition operator in R is denoted by the plus sign (+).
+
+```{r}
+
+1 + 1
+
+20 + 40
+
+```
+
+
+## Subtraction (-)
+Subtraction is the arithmetic operation used to find the difference between two numbers. It represents the process of taking away one quantity from another. The subtraction operator in R is denoted by the minus sign (-).
+
+
+```{r}
+
+4 - 2
+
+100 - 50
+
+```
+
+## Division (/)
+Division is the arithmetic operation used to distribute a quantity into equal parts or to find the quotient when one number is divided by another. The division operator in R is denoted by the forward slash (/)
+```{r}
+
+100 / 2
+
+0.5 / 0.25
+```
+
+
+## Multiplication (*)
+Multiplication is the arithmetic operation used to find the product of two or more numbers. It represents the process of repeated addition. The multiplication operator in R is denoted by the asterisk (*)
+```{r}
+
+3 * 5
+
+```
+

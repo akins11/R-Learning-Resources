@@ -1,0 +1,308 @@
+# Data exploration
+Data exploration is the process of analyzing and understanding a dataset to gain insights into its characteristics, patterns, and relationships. The main objective of data exploration is to get a sense of the data's distribution and variability before proceeding to more formal analysis or modeling.
+
+In the subsequent section, we will conduct an exploration of the prepared salary dataset using several fundamental functions available in the `dplyr` package.
+
+```{r}
+
+df <- read_csv("cleaned_salary.csv")
+
+```
+
+
+## `select()`
+
+With the `select` function, we can swiftly generate a descriptive summary for all numeric variables in our dataset by following these steps:
+1. Employ the `select()` and `where()` function from the `dplyr` package to choose only numeric variables.
+2. Extract a descriptive summary, which includes the minimum, median, mean, quantile, and maximum, utilizing the `summary()` function.
+
+
+```{r}
+
+df |> 
+  select(where(is.numeric)) |> 
+  summary()
+
+```
+
+
+In this analysis, we observe the following:
+
+> The average age of workers in the salary dataset is 33.6 years, with the youngest being 21 years old and the oldest 62 years old. 
+
+> Regarding salaries, the average is $115,690, with some workers earning as little as $350, while others earn up to $250,000. 
+
+> As for years of experience, the maximum is 34 years, and on average, workers have approximately 8 years of experience.
+
+
+
+## `distinct()`
+The distinct function can be utilized to remove duplicate records, retaining only unique records.
+
+
+In this case, we will utilize the `distinct()` function to obtain the unique education levels for each employee.
+
+
+```{r}
+
+distinct(df, education_level)
+
+```
+
+The output indicates that the dataset includes education levels ranging from "High School" to "PhD"
+
+
+
+we can also combine the distinct() and n_distinct() function to extract the number of unique job titles in the dataset.
+
+
+```{r}
+
+df |>
+  distinct(job_title) |>
+  n_distinct()
+
+```
+The output reveals that there are 130 different job titles holders of workers in the dataset.
+
+
+## `count()`
+The `count()` function efficiently provides us with the number of occurrence of each unique value for one or more variables.
+
+
+By using the `count()` function, we can obtain the count of employees for each gender in our dataset.
+
+```{r}
+
+count(df, gender, sort = TRUE, name = "number_of_employees")
+
+```
+
+
+The summary output shows that there are 3,599 male employees, which is more than the number of female employees (2,951), while the remaining genders consist of only 14 employees in total.
+
+
+Top 10 most frequent jobs
+Using the `count()` function, we can also retrieve the ten most frequently occurring job titles in the salary dataset.
+
+```{r}
+
+df |>
+  count(job_title, sort = TRUE, name = "number_of_employees") |>
+  head(10)
+
+```
+
+
+The output indicates a higher representation of tech-related jobs in our data compared to non-tech related jobs.
+
+
+
+## `filter()`
+The `filter()` function is used to extract rows from a dataset that meet specific conditions or criteria.
+
+With the `filter()` function, we can selectively extract the records of employees who have 12 and above years of experience and then calculate the descriptive summary of their salaries.
+
+
+```{r}
+
+df |>
+  filter(years_of_experience >= 12) |>
+  select(salary) |> 
+  summary()
+
+```
+
+
+When we take a look at the output, we can observe that employees with 12 years and above of experience have as average salary of 172,492, which is higher than the overall average of 115,690.  
+
+
+we can use the `stringr` function `str_detect()` to detect only Junior jobs title and filter only records of people with junior roles. 
+
+
+
+```{r}
+
+df |>
+  filter(str_detect(job_title, "Junior")) |>
+  select(age) |>
+  summary()
+
+```
+
+
+
+For Junior job positions the age bracket is from 21 to 37 years of age.
+
+
+
+### Filtering by multiple criteria
+The `filter()` function can also allow you to filter the data to only include rows that meet multiple conditions simultaneously. you can use use the logical operators such as `&` (AND) and `|` (OR) to combine conditions.
+
+For example, suppose we want to obtain the descriptive summary of employees who are male and have attained either a Master's Degree or PhD, we can achieve this by performing the following:
+
+
+```{r}
+
+selected_education_levels <- c("Master's Degree", "PhD")
+
+df |>
+  filter(gender == "Male" & education_level %in% selected_education_levels) |>
+  select(age, years_of_experience, salary) |>
+  summary()
+
+```
+
+
+## `mutate()`
+The `mutate()` function is used to create or modify columns (variables) in a dataset. It allows you to add new variables based on existing ones or perform calculations to transform the data in a flexible and straightforward manner.
+
+To begin using the` mutate()` function, we can convert the "education_level" variable data type to a factor, effectively creating an ordered level of unique values when presenting a summarized version of the variable.
+
+
+```{r}
+
+edu_level <- c("High School", "Bachelor's Degree", "Master's Degree", "PhD")
+
+df <- df |>
+  mutate(education_level = factor(education_level, levels = edu_level))
+
+df |>
+  count(education_level, name = "number_of_employees") |>
+  mutate(proportion = round(prop.table(number_of_employees)*100, 2))
+
+```
+
+As expected, the largest proportion (> 44%) of employees in our dataset hold a "Bachelor's Degree", with "Master's Degree" and "PhD" holders following behind.
+
+
+To categorize employees into several age groups, we can use a combination of the `mutate()` function and `case_when()` function. Additionally, we will ensure that the data type is set to a factor to facilitate the ordering process.
+
+
+```{r}
+
+group <- c('Young Adult', 'Adults', 'Middle-Aged Adults', 'Older Adults')
+
+df <- df |> 
+  mutate(age_group = case_when(age <= 34 ~ group[1],
+                               age <= 44 ~ group[2],
+                               age <= 54 ~ group[3],
+                               age <= 62 ~ group[4]),
+         age_group = factor(age_group, levels = group))
+
+count(df, age_group, name = "number_of_workers")
+
+```
+
+
+A large portion of the total employees in our dataset consists of "Young Adult". we can also observe a pattern indicating that as employees' age increases, their representation in the current data decreases.
+
+When dealing with a date variable, we can extract several key component to conducts a more precise analysis based on a particular period. These components comprise the year, quarter, month, day, hour, minute and seconds.
+
+For our dataset, we will separate these components into different columns using various functions from the `lubridate` package.
+
+
+```{r}
+df <- df |>
+  mutate(
+    year    = year(date),
+    quarter = quarter(date),
+    month   = month(date, label = TRUE, abbr = TRUE),
+    day     = day(date),
+    hour    = hour(date),
+    minute  = minute(date),
+    second  = second(date)
+  ) 
+
+select(df, date, year, quarter, month, day, hour, minute, second) |>
+  head(3)
+```
+
+
+
+## `summarise()`
+The `summarise()` function is used to calculate and aggregate values for one or more variable (or grouped variable) in a dataset.
+
+We can rewrite the aggregate summary we conducted earlier in the analysis by using the `summarise()` function.
+
+
+
+```{r}
+df |> 
+  summarise(minimum = min(age),
+            # quantile25 = quantile(age, 0.25),
+            median  = median(age),
+            average = mean(age) |> round(2),
+            # quantile75 = quantile(age, 0.75),
+            maximum = max(age))
+```
+
+
+```{r}
+
+df |> 
+  summarise(minimum = min(age),
+            median  = median(age),
+            average = mean(age) |> round(2),
+            maximum = max(age))
+
+```
+
+
+The `summarise()` function offers greater flexibility, allowing you to control the number of aggregations, the number of variables involved, the naming conventions, and more.
+
+By utilizing the `across()` function, we can summarize multiple numeric variables simultaneously.
+
+```{r}
+
+df |> 
+  summarise(across(where(is.numeric), \(x) mean(x) |> round(2)))
+
+```
+
+The code above performs a summary across all columns that contain numeric data, computing the average and rounding the result to two decimal places.
+
+
+
+
+## `group_by()`
+The `group_by()` function in dplyr is used to group a dataset based on one or more variables. Once the data is grouped, you can apply functions and calculations to each group independently.
+
+
+To determine the average salary for each education level, we will employ the `group_by()` function in conjunction with the `summarise()` function. This will allow us to create groups based on education level and then calculate the average salary within each group.
+
+
+```{r}
+
+df |>
+  group_by(education_level) |>
+  summarise(number_of_employees = n(),
+            average_salary = mean(salary))
+
+```
+
+The output provides a clear representation of the average salary distribution based on education level, showing a positive correlation between higher education levels and higher average salaries.
+
+
+Using the `group_by()` function we can summarise the average salary based on the employee's age group and their job status as juniors or seniors.
+
+To accomplish this, we will first create a new variable called "job_status" to indicate whether an employee is a junior, senior, or falls into another category. Then, we will filter the dataset to include only employees within the junior and senior group. Finally, we will calculate the average salary based on the employee's age group and "job status".
+
+
+
+
+```{r}
+
+df |>
+  mutate(job_status = case_when(str_detect(job_title, "Junior") ~ "Junior",
+                                str_detect(job_title, "Senior") ~ "Senior",
+                                .default = "Others")) |>
+  filter(job_status %in% c("Junior", "Senior")) |>
+  group_by(age_group, job_status) |>
+  summarise(number_of_employees = n(),
+            average_salary = mean(salary),
+            .groups = "drop")
+
+```
+
+The summary reveals a notable distinction between employees in junior and senior roles concerning their salaries. As anticipated, junior roles have a lower average salary compared to senior roles.

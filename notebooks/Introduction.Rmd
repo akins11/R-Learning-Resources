@@ -1,0 +1,13 @@
+# What is Data Analytics
+
+Data analytics is the process of extracting, examining, cleaning, transforming, and interpreting raw data to extract meaningful insights, patterns, and trends. By using various tools, techniques, and statistical methods, data analytics empowers businesses and individuals to extract valuable information from many datasets, which can be used for a wide range of purposes.
+
+
+# What is R
+R is a powerful programming language and open-source software environment and a tool for data analysis, statistical computing, and graphical representation.
+
+# Download R
+Go to the official R website: Visit the Comprehensive R Archive Network (CRAN) website at https://cran.r-project.org/.
+
+# Download RStuido
+Go to the RStudio website: Visit the RStudio website at https://www.rstudio.com/.

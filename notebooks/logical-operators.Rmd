@@ -1,0 +1,64 @@
+# Logical Operators
+Logical operators in R are used to combine or manipulate logical values (Boolean values: `TRUE` or `FALSE`) and are crucial for performing conditional evaluations, creating complex conditions, and controlling the flow of code execution.
+
+R provides three main logical operators: `"AND" (&), "OR" (|), and "NOT" (!)`.
+
+
+## And Operator ( & )
+The AND operator evaluate two or more conditions and return `TRUE` if all conditions are true; otherwise, it return `FALSE`. It require that all individual expressions connected by '&' must be TRUE for final result to be `TRUE.`
+
+```{r}
+
+TRUE & TRUE       
+
+FALSE & FALSE
+
+1 & 1
+
+```
+
+
+```{r}
+
+FALSE & TRUE
+
+0 & 1
+
+```
+
+
+
+## Or Operator ( | )
+The OR operator evaluate two or more conditions and return TRUE if at least one of the conditions is TRUE; otherwise, it returns FALSE. it requires that at least one of the individual expressions connected by `|` must be TRUE for the final result to be TRUE.
+
+```{r}
+
+TRUE | TRUE       
+
+FALSE | FALSE
+
+1 | 1
+
+```
+
+
+```{r}
+
+TRUE | FALSE
+
+1 | 0
+
+```
+
+
+
+## NOT Operator ( ! )
+The NOT operator negates a single logical expression and return the opposite value. it converts `TRUE` to `FALSE` and `FALSE` to `TRUE.`
+
+```{r}
+!TRUE
+!FALSE
+
+!1
+!0
+```

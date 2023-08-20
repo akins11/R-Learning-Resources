@@ -1,0 +1,94 @@
+# Comparison Operators
+
+Comparison operators in R are used to compare values and produce logical results (TRUE or FALSE) based on the comparison. These operators are fundamental for creating conditional expressions, filtering data, and making decisions in R.
+
+R provides several comparison operators that allow you to compare different data types, including numeric, character, and logical values.
+
+
+## Equal TO ( == )
+The equal to operator `==` is used to compare if two values are equal. if the value is equal it return `TRUE`, otherwise `FALSE`.
+
+```{r}
+
+TRUE == TRUE          # TRUE is equal to TRUE
+
+3 == 3                # 3 is is equal to 3
+
+"Orange" == "Apple"   # 'Orange' is equal to 'Apple'
+
+```
+
+
+
+## Not Equal To ( != )
+The not equal to operator `!=` compares if two values are not equal. if two values are not equal, it will return `TRUE`, otherwise `FALSE`.
+
+```{r}
+
+TRUE != FALSE        # TRUE is not equal to FALSE
+
+3 != 3               # 3 is not equal to 3
+
+"Orange" != "Apple"  # Orange is not equal to Apple
+
+```
+
+
+
+## Greater Than ( > )
+The greater than operator `>` checks if the left-hand side value is greater than the right-hand side value. if true, it returns `TRUE`, otherwise `FALSE`.
+
+```{r}
+
+5 > 3        # 5 is greater than 3
+
+1.2 > 1.1    # 1.2 is greater than 1.1
+
+20 > 20      # 20 is greater then 20
+
+```
+
+
+
+## Greater Than or equal to ( >= )
+The greater than or equal to operator `>=` checks if the left-hand side value is greater than or equal to the right-hand side value. if true, it returns `TRUE`, otherwise `FALSE`.
+
+```{r}
+
+7 >= 3     # 7 is greater than or equal to 3
+
+20 >= 20   # 20 is greater than or equal to 20
+
+10 >= 15   # 10 is greater than or equal to 15
+
+```
+
+
+## Less Than ( < )
+The less than operator `<` checks if the left-hand side value is less than the right-hand side value. if true, it returns `TRUE`, otherwise `FALSE`
+
+```{r}
+
+2 < 4        # 2 is less than 4
+
+15 < 15.5    # 15 is less than 15.5
+ 
+20 < 20      # 20 is less than 20
+
+```
+
+
+## Less Than or equal to ( <= )
+The less the less than or equal to operator `<=` checks if the left-hand side value is less than or equal to the right-hand side value. if true, it returns `TRUE` otherwise `FALSE`.
+
+```{r}
+
+6 <= 9          # 6 is less than or equal to 9
+
+12 <= 12.0      # 12 is less than or equal to 12.0
+
+21 <= 20        # 20 is less than or equal to 20
+
+```
+
+

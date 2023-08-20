@@ -1,0 +1,215 @@
+# visualization with ggplot2
+
+ggplot2 is designed for generating statistical or data graphics. What set ggplot2 apart from many other graphics packages is its foundation on the Grammar of Graphics, which provides a structured framework for combining independent components to create graphs.
+ggplot2 follows an iterative design approach. You initiate the process with a layer displaying the raw data, and subsequently, you incorporate additional layers and statistical summaries.
+
+Continuing with the previously prepared salary dataset, we will visually explore various variables to gain more insights.
+
+```{r}
+
+df <- read_csv("cleaned_salary.csv")
+
+```
+
+
+## Buliding a basic bar chart
+
+Before we proceed with constructing our bar chart, it is crucial to understand the fundamental components of ggplot2:
+
+1. The first component is the data.
+2. The aesthetic component consists of the mapping that link variables in the data to visual attributes.
+3. Lastly, there is at least one layer that outlines how each observation
+should be rendered. These layers are generally created using a `geom` function. 
+
+
+By using the `ggplot()` function, we can incorporate both the data and aesthetic mappings. This function initializes a ggplot object, enabling the addition of further layers to the plot.
+
+```{r}
+
+fig <- ggplot(
+  data = df, 
+  mapping = aes(x = age_group)
+) 
+
+fig
+
+```
+
+
+
+The next thing is to include the third crucial component, a geom. To generate a bar chart, we will utilize the `geom_bar()` function, which adjusts the height of each bar based on the number of cases within each group.
+
+```{r}
+
+fig <- fig + geom_bar()
+  
+fig
+
+```
+
+
+Additionally, we have the option to incorporate other layers, such as labels, to enhance the plot's informativeness and clarity.
+
+```{r}
+
+fig + 
+  labs(
+    x = "Age Group", 
+    y = "Count",
+    title = "Number of Employees by Age Group",
+    subtitle = "For all Job Titles",
+    caption = "Source: Kaggle"
+  )
+
+```
+
+
+
+## Aggregate summary
+We can create a visualization of the average salary for each education level. The process is quite similar to what we did earlier, except that we will first calculate the summary before creating the visualization.
+
+```{r}
+
+fig_df <- df |>
+  group_by(education_level) |>
+  summarise(average_salary = mean(salary))
+
+fig_df
+
+```
+
+
+Additionally, we will use the `geom_col()` function conveniently to generate the bars in the plot.
+
+```{r}
+
+ggplot(
+  data = fig_df, 
+  mapping = aes(x = education_level, y = average_salary)
+) +
+  geom_col() +
+  labs(
+    x = "Education level",
+    y = "Average salary",
+    title = "Average Salary by Level of Education"
+  )
+
+```
+
+
+## Multiple category variables
+We can simultaneously visualize multiple categorical (character) variable, similar to how we did for the aggregate bar chart. In this case, we are visualizing not just one, but two categorical variables.
+
+```{r}
+
+fig_df <- df |>
+  group_by(age_group, gender) |>
+  summarise(average_salary = mean(salary), .groups = "drop") 
+
+fig_df
+
+```
+
+
+The first step we will take is to add an additional aesthetic argument, 'fill = gender', which allows us to specify the fill color of the elements in the plot based on the 'gender' variable. The 'fill' argument in the `aes()` function determines how the different levels of the 'gender' variable are visually represented in the plot, by assigning unique colors to each level. Additionally, we will add the `position = "dodge"` argument into the '`geom_col()`` function, this ensures that the bars representing different categorical variables are displayed side by side, allowing for easy comparison and avoiding overlap.
+
+```{r}
+
+ggplot(
+  data = fig_df, 
+  mapping = aes(x = age_group, y = average_salary, fill = gender)
+) +
+  geom_col(position = "dodge") +
+  labs(
+    x = "Age group", 
+    y = "Salary", 
+    fill = "Gender",
+    title = "Average Salary by Gender & Age Group"
+    )
+
+```
+
+
+## Scatterplots
+Scatterplots are used to visually display the relationship between two continuous variables. The positioning of each point in the scatterplot corresponds to the values of the two variables for that particular observation and the pattern of the points on the plot provides insights into the nature of the relationship between the two variables.
+
+In this section, we will construct a scatterplot using the `geom_point()` function to show the correlation between employees' years of experience and their salary. Additionally, we will visualize the variables while considering the level of education.
+
+
+```{r}
+
+ggplot(
+  data = df, 
+  mapping = aes(x = years_of_experience, y = salary, color = education_level)
+) +
+  geom_point() +
+  labs(
+    x = "Years of experience", 
+    y = "Salary", 
+    color = "Education level",
+    title = "Relationship between Years of Experience & Salary by Level of Education"
+  )
+
+```
+
+
+
+## Line Chart
+Line charts displays data points connected by a straight line. It is used to show the trend or progression of a continuous variable over a specific period or sequence. In other words, line chart are very useful for creating visualizations that show trends across several periods. such as time series charts, etc.
+
+```{r}
+
+fig_df <- df |> 
+  group_by(month) |>
+  summarise(average_salary = mean(salary)) 
+
+fig_df
+
+```
+
+To create a line chart with ggplot2, we need to use the `geom_line()` function. Additionally, we provide the `aes()` function with the argument "group = 1" because it is necessary for ggplot2 to correctly connect the data points into a continuous line point. The "group = 1" ensures that all data points are treated as part of a single group, allowing ggplot2 to properly connect them in a continuous sequence on the plot. without this specification, the data points will be treated as an individual group, resulting in disconnected points rather than a continuous line.
+
+
+```{r}
+ggplot(
+  data = fig_df, 
+  mapping = aes(x = month, y = average_salary, group = 1)
+) +
+  geom_line() +
+  labs(
+    x = NULL, 
+    y = "Salary", 
+    title = "Average Salary by Month"
+  )
+```
+
+
+We can also visualize the salary trend across all months for each level of education. Similar to the previous line chart, we only need to include the "education_level" variable in the `group` and `color` arguments within the `aes()` function. This additions allows ggplot2 to differentiate and color-code the line charts based on different levels of education, providing an informative representation of the salary trend.
+
+```{r}
+df |> 
+  group_by(month, education_level) |>
+  summarise(average_salary = mean(salary), .groups = "keep") |>
+  
+  ggplot(mapping = aes(x = month,
+                       y = average_salary,
+                       group = education_level,
+                       color = education_level)) +
+  geom_line() +
+  labs(
+    x = NULL,
+    y = "Salary",
+    color = "Education level",
+    title = "Average Salary by Month & Level of Education"
+  )
+```
+
+
+```{r}
+df |>
+  group_by(month, day) |>
+  summarise(average_salary = mean(salary)) |>
+  
+  ggplot(mapping = aes(x = month, y = average_salary)) +
+  geom_line()
+```

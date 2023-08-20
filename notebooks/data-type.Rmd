@@ -1,0 +1,127 @@
+In R, there are several data types that are used to represent different kinds of data. Understanding these data types is crucial for data analysis, as they determine how the data is stored, processed, and manipulated. 
+
+Here are the main data types in R:
+
+## Numeric
+
+This data type is used to represent real or decimal numbers.
+
+
+### Integer
+
+Integers are a subset of numeric data that represents whole numbers without decimal points.
+
+```{r}
+
+2L
+
+```
+
+
+### Double
+Doubles (or numeric) can represent real or decimal numbers.
+```{r}
+
+2
+
+100.245
+
+```
+
+
+## character
+
+The character data type is used to represent text or strings. Text in R should be enclosed in single ( '' ) or double quotes ( "" ).
+
+```{r}
+
+"Goodluck"
+
+'Goodluck'
+
+```
+
+
+## Logical
+
+The logical data type represents Boolean values, which can be either TRUE or FALSE. Logical values are often used for conditional expressions and comparisons.
+
+
+```{r}
+
+TRUE
+FALSE
+
+```
+
+```{r}
+
+T
+F
+
+```
+
+
+
+## Others
+
+such as ::
+
+Factor: Factors are used to represent categorical data or data with discrete levels
+
+Date: The date data type is used to represent dates in R
+
+Complex: The complex data type is used to represent complex numbers in R,
+
+
+
+### Factor
+Factors are used to represent categorical data or data with discrete levels.
+
+```{r}
+
+factor(c("Male", "Female", "Male", "Male", "Female"))
+
+
+```
+
+### Date
+The date data type is used to represent dates in R
+
+```{r}
+
+as.Date("2023-07-27")
+
+```
+
+### Complex
+The complex data type is used to represent complex numbers in R, which have both real and imaginary parts
+
+```{r}
+
+3 + 2i
+
+```
+
+
+```{r}
+
+# R will not run this code :
+
+# print("Character is a data type in R")
+
+
+# R will run the code below :
+
+print("Double is a data type in R")
+
+
+```
+
+
+
+
+
+
+
+

@@ -1,0 +1,339 @@
+# Data Preparation
+Data preparation is a crucial phase in the data analysis process that encompasses several key steps, including data importation, data inspection, and data cleaning.
+
+To explain this process we will use a salary dataset that shows the change in salary based on several variables such as years of experience age, education level, gender across a particular period.
+
+To illustrate this procedure, we will utilize a salary dataset that exhibits salary variations over a specific period, taking into account various factors such as years of experience, age, education level, gender, and more.
+
+
+## Installing packages
+Before commencing the data preparation we will install the tidyverse.
+The tidyverse is an ecosystem of R packages that are designed to work together seamlessly for data Preparation, data Manipulation, data Visualization and data analysis. The core packages include: 
+`ggplot2, dplyr, tidyr, readr, purrr, tibble, forcats and more...`
+
+To install the tidyverse and all its core packages, you can use the following command.
+
+
+
+```{r}
+install.packages("tidyverse")
+```
+
+This command will download and install the tidyverse packages along with its core dependencies.
+
+You can also install individual package using the same command:
+
+
+```{r}
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tidyr")
+install.packages("readr")
+```
+
+
+After installing the tidyverse or any other single package, you can load all the core packages at once by using `library()` function.
+
+
+```{r}
+
+library(tidyverse)
+
+# OR for a single package
+
+library(dplyr)
+
+```
+
+
+Once loaded, you can start using functions from each packages in your R scripts.
+
+
+
+## Importing dataset
+Data importation is the process of loading external data from various file formats, database or web services into the R environment for further analysis.
+The salary dataset is a .csv file which means we have to import it using a function that can read a .csv file.
+
+
+```{r}
+
+df <- read_csv("salary.csv")
+
+```
+
+Another important information is to make sure the salary dataset is in the same directory as your R script.
+
+
+```{r}
+
+df
+
+```
+
+
+## Data Inspection
+Data inspection is a crucial step in the data analysis process. it involves examining the structure, characteristics and properties of the data to gain insight and understanding before performing any formal analysis or modeling.
+
+Inspecting the data involves carrying out various tasks, including:
+
+
+### Data Dimention
+
+```{r}
+
+paste("Number of Rows :", nrow(df))
+paste("Number of Columns : ", ncol(df))
+
+```
+
+
+### columns
+Examining the column names.
+
+```{r}
+
+colnames(df)
+
+```
+
+
+### head / tail
+
+```{r}
+
+head(df)
+
+```
+
+
+
+```{r}
+
+tail(df)
+
+```
+
+
+### structure
+
+```{r}
+
+glimpse(df)
+
+```
+
+
+Upon close examination of the summary, it becomes evident that the "years of experience" variable, currently represented as character data, should be of numeric data type.
+
+### data type
+```{r}
+
+lapply(df, typeof)
+
+```
+
+
+### missing values
+As part of data inspection, you can check the data for missing values.
+
+```{r}
+
+lapply(df, \(x) sum(is.na(x)))
+
+```
+
+
+### Unique values
+Verifying the accuracy of unique values in character columns.
+
+```{r}
+
+df |> 
+  select(Gender, `Education Level`) |> 
+  lapply(unique)
+
+```
+
+Upon closer examination of the unique values in the education level column, you will notice that there are multiple representations for the following categories:
+1. "Bachelor's Degree" is also represented as "Bachelor's."
+2. "Master's Degree" is also represented as "Master's."
+3. "PhD" is also represented as "phD."
+
+To avoid confusion and incorrect results when running an analysis, it is important to clean the column so that each value represent a single, appropriate education level.
+
+
+
+
+
+## Data Cleaning
+Data cleaning is the process of correcting errors, inconsistencies, and inaccuracies in data sets to improve data quality. It is a critical step in the data analysis process as it ensures that the data used for the analysis is accurate, complete, and reliable. 
+
+Regarding the salary data, we will undertake three primary data cleaning procedures:
+1. Revise the column names to be more user-friendly and concise.
+2. Convert the data type of the "years of experience" column to numeric.
+3. Address any missing values present in the data.
+4. Addressing the multiple representations of a particular value in the “Education level” column.
+
+
+
+### 1. Revising the column names 
+
+#### Manually
+We can rename each column manually by associating the data with a vector containing the new column names.
+
+```{r}
+
+df_copy <- df
+
+new_column_names <- c(
+  "age", "gender", "education", "job_title",
+  "year_of_experience", "salary", "date"
+)
+
+colnames(df_copy) <- new_column_names
+
+colnames(df_copy)          # revised column names
+
+```
+
+In cases with only a few columns, manually renaming columns using a vector of new names can be practical. However, for datasets with a substantial number of columns, this approach can become quite tedious and time-consuming.
+
+
+
+#### Interatively
+We can efficiently rename multiple columns iteratively using the `rename_with()` function from the `dplyr` package, Which provides a more flexible way than manually renaming each column.
+
+Additionally, we will make use of the `str_replace_all()` and `str_to_lower()` functions from the `stringr` package. These functions enable us to replace characters and convert the characters to lowercase, respectively.
+
+
+```{r}
+
+df <- df |> 
+  rename_with(\(.x) str_replace_all(.x, " ", "_") |> str_to_lower())
+
+colnames(df)
+
+```
+
+
+
+
+### 2. Converting Data type
+The years of experience value for each worker should be converted to numeric format to enable numeric summary and distribution analysis.
+
+
+```{r}
+
+df |> select(years_of_experience) |> glimpse()
+
+```
+
+
+Based on the glimpse data it is evident that some rows contain a combination of numbers and letters, such as "20A". This issue may have arisen due to flawed data collection. Before proceeding with the conversion to numeric values, we will examine the number of years of experience entries with this pattern.
+
+```{r}
+df |> distinct(years_of_experience) |> pull()
+```
+
+
+According to the output above, it appears that the entry "20A" (workers with 20 years of experience) is the only one affected among all the entries.
+
+To address this, we will begin by eliminating all the strings from the inaccurately imputed values. Afterword, we can convert the variable to a numeric format.
+
+```{r}
+
+df <- df |>
+  mutate(
+    years_of_experience = ifelse(years_of_experience == "20A", "20", years_of_experience),
+    years_of_experience = as.numeric(years_of_experience)
+  )
+
+glimpse(df)
+
+```
+
+
+
+
+### 3. Missing values
+Missing values are data points that are not recorded or not available in a dataset. They can occur for various reason, such as data entry errors, sensor malfunctions, participant non-response, or simply because the information is not applicable or not collected for a particular observation. Missing values can be denoted in different ways, such as "NA", "NaN" (Not a Number), "NULL".
+
+Handling missing values is a critical aspect of data cleaning and preprocessing because they can affect the accuracy and reliability of data analysis and modeling.
+
+To address missing values in the salary data, we will perform imputation for both numeric and character variable. For numeric columns, we will replace the missing values with the average of all other values. As for character columns, the missing values can be replaced with the most frequent value found in each respective column.
+
+Replacing all missing values present in every numeric variable with the average value using the `across()` function with the `replace_na()` and `mean()` function
+```{r}
+
+df |>
+  mutate(
+    across(where(is.numeric), \(.x) replace_na(.x, mean(.x, na.rm = TRUE)))
+  )
+
+```
+
+As for character columns, the missing values will be replaced with the most frequent value found in each respective column.
+
+```{r}
+
+df |>
+  mutate(
+    across(where(is.character), \(.x) {
+      
+      freq <- table(.x)               # The frequency of each value.
+      
+      freq[freq == max(freq)] |>      # Get the value with the highest frequency,
+        names() |>                    # Grab the name of that value,
+        replace_na(.x, replace = _)   # Replace all missing records.
+      
+    })
+  ) 
+
+```
+
+Due to the relatively small proportion of missing values in the salary dataset, we can utilize the `drop_na()` function from the `tidyr` package to remove all the missing values. However, it's essential to bear in mind that dropping missing values should be considered a last resort when performing data cleaning.
+
+
+```{r}
+
+# Drop all missing values
+df <- drop_na(df) 
+
+# Check for missing values
+df |> lapply(\(.x) sum(is.na(.x)))
+
+```
+
+
+
+
+
+### 4. Addressing the multiple categorical representations.
+To handle the discrepancies in the `education level` column, we will utilize both the `mutate()` function and the `case_match()` function from the `dplyr` package. This will allow us to correct the misrepresented values and align them with their appropriate counterparts.
+
+```{r}
+
+df <- df |>
+  mutate(education_level = case_match(
+    education_level,
+    "Bachelor's" ~ "Bachelor's Degree",
+    "Master's" ~ "Master's Degree",
+    "phD" ~ "PhD",
+    .default = education_level
+  )) 
+
+
+unique(df$education_level)
+
+```
+
+
+## Save Prepared Data
+At this point, we can save the cleaned data using the `write_csv()` function from the `readr` package. This function will store the data in the current directory by default or in a specific directory if you specify the desired path in the file argument.
+
+```{r}
+
+write_csv(df, file = "cleaned_salary.csv")
+
+```
+
